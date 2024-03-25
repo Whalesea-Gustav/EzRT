@@ -6,6 +6,9 @@
 #include "svpng.inc"    // png输出 ref: https://github.com/miloyip/svpng
 #include <omp.h>    // openmp多线程加速
 
+#include <chrono>
+#include <ctime>
+
 using namespace glm;
 using namespace std;
 
@@ -20,7 +23,8 @@ const double BRIGHTNESS = (2.0f * 3.1415926f) * (1.0f / double(SAMPLE));
 // 输出图像分辨率
 const int WIDTH = 256;
 const int HEIGHT = 256;
-
+const double dW = 1.0 / static_cast<double>(WIDTH);
+const double dH = 1.0 / static_cast<double>(HEIGHT);
 // 相机参数
 const double SCREEN_Z = 1.1;        // 视平面 z 坐标
 const vec3 EYE = vec3(0, 0, 4.0);   // 相机位置
@@ -178,15 +182,19 @@ void imshow(double* SRC)
     double* S = SRC;    // 源数据
 
     FILE* fp;
-    fopen_s(&fp, "image.png", "wb");
+
+    const auto now = std::chrono::system_clock::now();
+    string tstring = std::format("{:%Y-%m-%d-%H-%M-%OS}", now);
+    tstring = "image_" + tstring + ".png";
+    fopen_s(&fp, tstring.c_str(), "wb");
 
     for (int i = 0; i < HEIGHT; i++)
     {
         for (int j = 0; j < WIDTH; j++)
         {
-            *p++ = (unsigned char)clamp(pow(*S++, 1.0f / 2.2f) * 255, 0.0, 255.0);  // R 通道
-            *p++ = (unsigned char)clamp(pow(*S++, 1.0f / 2.2f) * 255, 0.0, 255.0);  // G 通道
-            *p++ = (unsigned char)clamp(pow(*S++, 1.0f / 2.2f) * 255, 0.0, 255.0);  // B 通道
+            *p++ = (unsigned char)glm::clamp(pow(*S++, 1.0f / 2.2f) * 255, 0.0, 255.0);  // R 通道
+            *p++ = (unsigned char)glm::clamp(pow(*S++, 1.0f / 2.2f) * 255, 0.0, 255.0);  // G 通道
+            *p++ = (unsigned char)glm::clamp(pow(*S++, 1.0f / 2.2f) * 255, 0.0, 255.0);  // B 通道
         }
     }
 
@@ -373,8 +381,8 @@ int main()
             for (int j = 0; j < WIDTH; j++)
             {
                 // 像素坐标转投影平面坐标
-                double x = 2.0 * double(j) / double(WIDTH) - 1.0;
-                double y = 2.0 * double(HEIGHT - i) / double(HEIGHT) - 1.0;
+                double x = 2.0 * static_cast<double>(j) / static_cast<double>(WIDTH) - 1.0 + dW;
+                double y = 2.0 * static_cast<double>(HEIGHT - 1 - i) / static_cast<double>(HEIGHT) - 1.0 + dH;
 
                 // MSAA
                 x += (randf() - 0.5f) / double(WIDTH);
