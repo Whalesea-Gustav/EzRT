@@ -610,8 +610,8 @@ int main(int argc, char** argv) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
     // 生成着色器程序对象
-    std::string fshaderPath = "./shaders/fshader.fsh";
-    std::string vshaderPath = "./shaders/vshader.vsh";
+    std::string fshaderPath = "./shaders/fshaderBVH.fsh";
+    std::string vshaderPath = "./shaders/vshaderBVH.vsh";
     program = getShaderProgram(fshaderPath, vshaderPath);
     glUseProgram(program);  // 使用着色器
 

@@ -33,5 +33,8 @@ find_package(OpenMP)
 include_directories(include)
 
 add_subdirectory("part 1 -- Basic Raytracing with C++")
+add_subdirectory("part 2 -- BVH Accelerate Struct")
+add_subdirectory("part 3 -- OpenGL Raytracing")
+add_subdirectory("part 4 -- Disney Principle BRDF")
 
 

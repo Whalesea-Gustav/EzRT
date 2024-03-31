@@ -14,13 +14,15 @@ if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
 	set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
 endif()
 
+set(TARGET_NAME "OpenGLRayTracing")
+
 # project
-project(main)
+project(${TARGET_NAME})
 
 # target
 aux_source_directory("./lib" CPP_FILES)
-add_executable(main main.cpp ${CPP_FILES})
-target_include_directories(main PRIVATE include)
+add_executable(${TARGET_NAME} main.cpp ${CPP_FILES})
+target_include_directories(${TARGET_NAME} PRIVATE include)
 
 # dependency
 find_package(GLEW REQUIRED)
@@ -28,5 +30,5 @@ find_package(GLUT REQUIRED)
 find_package(GLM REQUIRED)
 
 # link
-target_link_libraries(main PRIVATE GLUT::GLUT)
-target_link_libraries(main PRIVATE GLEW::GLEW)
+target_link_libraries(${TARGET_NAME} PRIVATE GLUT::GLUT)
+target_link_libraries(${TARGET_NAME} PRIVATE GLEW::GLEW)
